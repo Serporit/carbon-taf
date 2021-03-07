@@ -10,8 +10,8 @@ public class TimerScreen {
     public WorkoutScreen skipTimer() {
         click("com.clearstone.rise:id/btn_skip");
         waitOneSec();
-        waitOneSec();
-        waitOneSec();
+//        waitOneSec();
+//        waitOneSec();
         return new WorkoutScreen();
     }
 }

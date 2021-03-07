@@ -22,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Bot {
     private static AndroidDriver driver;
-    private static final int WAIT_ELEMENT_TIMEOUT = 15;
-    private static final int COMMAND_DEFAULT_TIMEOUT_SECONDS = 10;
+    private static final int WAIT_ELEMENT_TIMEOUT = 5;
+    private static final int COMMAND_DEFAULT_TIMEOUT_SECONDS = 5;
     private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
 
     public static void init() {
@@ -38,6 +38,7 @@ public class Bot {
     }
 
     private static AndroidDriver initDriver() {
+        Logger.info("Init appium driver");
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("deviceName", "OnePlus7Pro");
         caps.setCapability("udid", "379285fb");
@@ -63,6 +64,7 @@ public class Bot {
         caps.setCapability("appActivity", "com.clearstone.rise/.ui.activity.MainActivity");
         try {
             driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+            setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
         } catch (Exception e) {
             driver = null;
         }
@@ -72,17 +74,13 @@ public class Bot {
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 
-    public static void openUrl(String url) {
-        Logger.info("Going to URL: " + url);
-        driver.get(url);
-    }
-
     public static void waitForElementVisible(String locator) {
         waitForElementVisible(locator, WAIT_ELEMENT_TIMEOUT);
     }
 
     public static void waitForElementVisible(String locator, int timeoutSeconds) {
-        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.visibilityOfAllElementsLocatedBy(by(locator)));
+        Logger.debug("Waiting for visible: " + locator);
+        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.visibilityOfElementLocated(by(locator)));
     }
 
     public static void softWaitForElementVisible(String locator, int timeoutSeconds) {
@@ -117,12 +115,11 @@ public class Bot {
     }
 
     public static void waitForElementDisappear(String locator) {
-        setImplWait(1);
-        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.invisibilityOfElementLocated(by(locator)));
-        setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
+        waitForElementDisappear(locator, WAIT_ELEMENT_TIMEOUT);
     }
 
     public static void waitForElementDisappear(String locator, int timeoutSeconds) {
+        Logger.debug("Waiting for disappear: " + locator);
         setImplWait(1);
         new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(by(locator)));
         setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
@@ -149,6 +146,18 @@ public class Bot {
         String text = driver.findElement(by(locator)).getText();
         Logger.info("Reading text: " + text);
         return text;
+    }
+
+    public static void waitForElementText(String locator, String value, int timeout) {
+        Logger.debug("Waiting for text value " + value + " at " + locator);
+        new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(by(locator), value));
+    }
+
+    public static void softWaitForElementText(String locator, String value, int timeout) {
+        try {
+            waitForElementText(locator, value, timeout);
+        } catch (Exception e) {
+        }
     }
 
     public static boolean isDisplayed(String locator) {
@@ -191,13 +200,14 @@ public class Bot {
             File copy = new File(scrPath);
             FileUtils.copyFile(screenshot, copy);
             Logger.info("Saved screenshot: " + screenshotName);
-            Logger.attach(scrPath, "Screenshot");
+//            Logger.attach(scrPath, "Screenshot");
         } catch (IOException e) {
             Logger.error("Failed to make screenshot");
         }
     }
 
     public static void waitOneSec() {
+        Logger.debug("Waiting 1s");
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

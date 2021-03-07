@@ -9,6 +9,7 @@ gradle-wrapper.properties
 gradlew
 gradlew.bat
 /build/
+/screenshots/
 /bin/
 /libs/selenium-taf.jar
 .classpath
