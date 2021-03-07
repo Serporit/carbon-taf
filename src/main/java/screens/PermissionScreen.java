@@ -1,7 +1,7 @@
 package screens;
 
-import static wrapper.Bot.click;
-import static wrapper.Bot.waitForElementDisappear;
+import static appium.Bot.click;
+import static appium.Bot.waitForElementDisappear;
 
 public class PermissionScreen {
     private final static String ALLOW_ALWAYS_BUTTON = "com.android.permissioncontroller:id/permission_allow_always_button";

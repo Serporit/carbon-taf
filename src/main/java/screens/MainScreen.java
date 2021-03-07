@@ -1,6 +1,8 @@
 package screens;
 
-import static wrapper.Bot.*;
+import logging.Logger;
+
+import static appium.Bot.*;
 
 public class MainScreen {
 
@@ -13,8 +15,16 @@ public class MainScreen {
         return new TimerScreen();
     }
 
+    public TimerScreen startDemo() {
+        waitForLoading();
+        click("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[1]");
+        return new TimerScreen();
+    }
+
+
     private void waitForLoading() {
-        softWaitForElementVisible(PROGRESS_BAR,2);
+        Logger.info("Waiting 'loading' icon");
+        softWaitForElementVisible(PROGRESS_BAR, 1);
         waitForElementDisappear(PROGRESS_BAR);
     }
 }

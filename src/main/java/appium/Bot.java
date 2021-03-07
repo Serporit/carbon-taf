@@ -1,4 +1,4 @@
-package wrapper;
+package appium;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -89,7 +89,7 @@ public class Bot {
         try {
             waitForElementVisible(locator, timeoutSeconds);
         } catch (Exception e) {
-            Logger.debug("DID NOT FOUND");
+//            Logger.debug("DID NOT FOUND");
         }
     }
 
@@ -159,8 +159,8 @@ public class Bot {
             int xCoord = element.getLocation().getX();
             int yCoord = element.getLocation().getY();
             displayed = xCoord > 0 && yCoord > 0;
-            Logger.info("Elements located " + locator + " are present.");
-        } else Logger.info("Element located " + locator + " not found.");
+            Logger.debug("Elements located " + locator + " are displayed.");
+        } else Logger.debug("Element located " + locator + " not found.");
         setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
         return displayed;
     }
