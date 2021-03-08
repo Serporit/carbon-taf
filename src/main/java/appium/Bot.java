@@ -19,7 +19,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 public class Bot {
     private static AndroidDriver driver;
@@ -33,10 +32,10 @@ public class Bot {
         }
     }
 
-    public static void initWithReset() {
-        resetAppData();
-        init();
-    }
+//    public static void initWithReset() {
+//        resetAppData();
+//        init();
+//    }
 
     private static AndroidDriver initDriver() {
         Logger.info("Init appium driver");
@@ -46,6 +45,9 @@ public class Bot {
         caps.setCapability("platformName", "Android");
         caps.setCapability("platformVersion", "10");
         caps.setCapability("automationName", "UiAutomator2");
+//        caps.setCapability("automationName", "Espresso");
+//        caps.setCapability("appPackage", "com.clearstone.rise");
+//        caps.setCapability("app", "com.clearstone.rise");
         try {
             return new AndroidDriver<MobileElement>(new URL("http://192.168.0.200:4723/wd/hub"), caps);
             //driver.context("NATIVE_APP");
@@ -56,32 +58,30 @@ public class Bot {
         }
     }
 
-    public static void resetAppData() {
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("deviceName", "OnePlus7Pro");
-        caps.setCapability("udid", "379285fb");
-        caps.setCapability("platformName", "Android");
-        caps.setCapability("platformVersion", "10");
-        caps.setCapability("automationName", "UiAutomator2");
-        caps.setCapability("appPackage", "com.clearstone.rise");
-        caps.setCapability("appActivity", "com.clearstone.rise/.ui.activity.MainActivity");
-        try {
-            driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
-            setImplWait(WAIT_ELEMENT_TIMEOUT);
-        } catch (Exception e) {
-            driver = null;
-        }
-    }
+//    public static void resetAppData() {
+//        DesiredCapabilities caps = new DesiredCapabilities();
+//        caps.setCapability("deviceName", "OnePlus7Pro");
+//        caps.setCapability("udid", "379285fb");
+//        caps.setCapability("platformName", "Android");
+//        caps.setCapability("platformVersion", "10");
+//        caps.setCapability("automationName", "UiAutomator2");
+//        caps.setCapability("automationName", "UiAutomator2");
+//        caps.setCapability("appPackage", "com.clearstone.rise");
+//        caps.setCapability("appActivity", "com.clearstone.rise/.ui.activity.MainActivity");
+//        try {
+//            driver = new AndroidDriver<AndroidElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+//            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+//            driver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
+//            driver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+//        } catch (Exception e) {
+//            driver = null;
+//        }
+//    }
 
     public static void openApp() {
         Logger.debug("Opening app");
         driver.startActivity(new Activity("com.clearstone.rise", ".ui.activity.MainActivity"));
     }
-
-    public static void setImplWait(int seconds) {
-        driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
-    }
-
     public static void pressHome() {
         driver.pressKey(new KeyEvent(AndroidKey.HOME));
     }

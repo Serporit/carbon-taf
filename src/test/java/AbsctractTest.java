@@ -18,12 +18,12 @@ public class AbsctractTest {
         if (testResult.getStatus() == ITestResult.FAILURE) {
             Bot.takeScreenshot(testResult.getMethod().getMethodName());
         }
-        Logger.debug("Closing the app");
-        Bot.closeApp();
     }
 
     @AfterSuite(alwaysRun = true)
     public void tearDown() {
         Streamer.close();
+        Logger.debug("Closing the app");
+        Bot.closeApp();
     }
 }
