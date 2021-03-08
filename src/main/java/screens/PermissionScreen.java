@@ -1,9 +1,9 @@
 package screens;
 
 import static appium.Bot.click;
-import static appium.Bot.waitForElementDisappear;
+import static appium.Bot.waitForDisappear;
 
-public class PermissionScreen {
+public class PermissionScreen extends AbstractScreen {
     private final static String ALLOW_ALWAYS_BUTTON = "com.android.permissioncontroller:id/permission_allow_always_button";
     private final static String ALLOW_BUTTON = "com.android.permissioncontroller:id/permission_allow_button";
 
@@ -19,6 +19,6 @@ public class PermissionScreen {
 
     public void allowAll() {
         allowAlways().allow().allow();
-        waitForElementDisappear(ALLOW_BUTTON);
+        waitForDisappear(ALLOW_BUTTON);
     }
 }

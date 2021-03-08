@@ -1,13 +1,10 @@
 package screens;
 
-import logging.Logger;
+import static appium.Bot.click;
 
-import static appium.Bot.*;
-
-public class MainScreen {
+public class MainScreen extends AbstractScreen {
 
     public static final String START_BUTTON = "com.clearstone.rise:id/btn_launching";
-    public static final String PROGRESS_BAR = "com.clearstone.rise:id/progressBar";
 
     public TimerScreen startTraining() {
         waitForLoading();
@@ -21,10 +18,4 @@ public class MainScreen {
         return new TimerScreen();
     }
 
-
-    private void waitForLoading() {
-        Logger.info("Waiting 'loading' icon");
-        softWaitForElementVisible(PROGRESS_BAR, 1);
-        waitForElementDisappear(PROGRESS_BAR);
-    }
 }

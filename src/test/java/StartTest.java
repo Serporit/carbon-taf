@@ -1,4 +1,3 @@
-import appium.Bot;
 import logging.Logger;
 import org.testng.annotations.Test;
 import screens.*;
@@ -12,7 +11,6 @@ public class StartTest extends AbsctractTest {
 
     @Test
     public void fullDemoTest() {
-        loginScreen.openApp();
         mainScreen.startDemo().skipTimer();
         Streamer.initStreamer("detect");
         Streamer.addVideoToQueue("push");
@@ -33,7 +31,6 @@ public class StartTest extends AbsctractTest {
 
     @Test
     public void fullDemoTestIncremental() {
-        loginScreen.openApp();
         mainScreen.startDemo().skipTimer();
         int exercisesDone, goal;
         workoutScreen.getGoal();
@@ -44,12 +41,10 @@ public class StartTest extends AbsctractTest {
             Logger.info("Starting exercise: " + exercise);
             exercisesDone = 0;
             goal = workoutScreen.getGoal();
-            while (workoutScreen.isCountPresent() && workoutScreen.getCount() < goal && exercisesDone < goal*2) {
+            while (workoutScreen.isCountPresent() && workoutScreen.getCount() < goal && exercisesDone < goal * 2) {
                 Streamer.addVideoToQueue(exercise);
                 exercisesDone++;
-                Bot.waitOneSec();
-                Bot.waitOneSec();
-                Bot.waitOneSec();
+                workoutScreen.waitForCounterValue(exercisesDone, 3);
             }
             Logger.info(String.format("Exercises done: %s, Needed: %s", exercisesDone, goal));
 

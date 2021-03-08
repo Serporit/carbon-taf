@@ -4,14 +4,14 @@ import appium.Bot;
 
 import static appium.Bot.*;
 
-public class WorkoutScreen {
+public class WorkoutScreen extends AbstractScreen {
     private static String counter = "com.clearstone.rise:id/tv_count";
     private static String restTimer = "com.clearstone.rise:id/blockTimer";
     private static String goalCount = "com.clearstone.rise:id/countExercise";
     private static String exercise = "com.clearstone.rise:id/tv_name";
 
     public int getCount() {
-        if (isElementPresent(counter)) {
+        if (isPresent(counter)) {
             return Integer.parseInt(readText(counter));
         } else return -1;
     }
@@ -21,19 +21,19 @@ public class WorkoutScreen {
     }
 
     public void rest() {
-        waitForElementVisible(restTimer);
-        waitForElementDisappear(restTimer, 15);
+        waitForDisappear(restTimer, 15);
+        waitOneSec();
     }
 
     public boolean isCountPresent() {
-        return isElementPresent(counter);
+        return isPresent(counter);
     }
 
     public String getExercise() {
-        return readText(exercise).replaceAll(" ","").toLowerCase();
+        return readText(exercise).replaceAll(" ", "").toLowerCase();
     }
 
     public void waitForCounterValue(int goal, int timeout) {
-        Bot.waitForElementText(counter, String.valueOf(goal), timeout);
+        Bot.softWaitForText(counter, String.valueOf(goal), timeout);
     }
 }

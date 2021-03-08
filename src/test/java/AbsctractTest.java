@@ -4,12 +4,15 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import screens.LoginScreen;
 import utils.Streamer;
 
 public class AbsctractTest {
     @BeforeSuite
     public void init() {
         Bot.init();
+//        Bot.openApp();
+        new LoginScreen().openApp().waitForLoading();
     }
 
     @AfterMethod(alwaysRun = true)
@@ -21,7 +24,7 @@ public class AbsctractTest {
         Bot.closeApp();
     }
 
-    @AfterSuite (alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void tearDown() {
         Streamer.close();
     }

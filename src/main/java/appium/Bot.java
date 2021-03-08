@@ -1,13 +1,15 @@
 package appium;
 
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import logging.Logger;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -16,8 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Bot {
@@ -46,7 +46,7 @@ public class Bot {
         caps.setCapability("platformVersion", "10");
         caps.setCapability("automationName", "UiAutomator2");
         try {
-            return new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+            return new AndroidDriver<MobileElement>(new URL("http://192.168.0.200:4723/wd/hub"), caps);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -64,31 +64,20 @@ public class Bot {
         caps.setCapability("appActivity", "com.clearstone.rise/.ui.activity.MainActivity");
         try {
             driver = new AndroidDriver<MobileElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
+//            driver.context("WEBVIEW_chrome");
             setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
         } catch (Exception e) {
             driver = null;
         }
     }
 
+    public static void openApp() {
+        Logger.debug("Opening app");
+        driver.startActivity(new Activity("com.clearstone.rise", ".ui.activity.MainActivity"));
+    }
+
     public static void setImplWait(int seconds) {
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
-    }
-
-    public static void waitForElementVisible(String locator) {
-        waitForElementVisible(locator, WAIT_ELEMENT_TIMEOUT);
-    }
-
-    public static void waitForElementVisible(String locator, int timeoutSeconds) {
-        Logger.debug("Waiting for visible: " + locator);
-        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.visibilityOfElementLocated(by(locator)));
-    }
-
-    public static void softWaitForElementVisible(String locator, int timeoutSeconds) {
-        try {
-            waitForElementVisible(locator, timeoutSeconds);
-        } catch (Exception e) {
-//            Logger.debug("DID NOT FOUND");
-        }
     }
 
     public static void pressHome() {
@@ -101,95 +90,58 @@ public class Bot {
         driver.pressKey(new KeyEvent(AndroidKey.BACK));
     }
 
-    public static List<String> readTextOfManyElements(String locator) {
-        List<String> texts = new ArrayList<>();
-        List<WebElement> elements = getElements(locator);
-        for (WebElement element : elements) {
-            texts.add(element.getText());
-        }
-        return texts;
+    public static void waitForDisappear(String locator) {
+        waitForDisappear(locator, WAIT_ELEMENT_TIMEOUT);
     }
 
-    private static List<WebElement> getElements(String locator) {
-        return driver.findElements(by(locator));
-    }
-
-    public static void waitForElementDisappear(String locator) {
-        waitForElementDisappear(locator, WAIT_ELEMENT_TIMEOUT);
-    }
-
-    public static void waitForElementDisappear(String locator, int timeoutSeconds) {
+    public static void waitForDisappear(String locator, int timeoutSeconds) {
         Logger.debug("Waiting for disappear: " + locator);
-        setImplWait(1);
+        try {
+            new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(by(locator)));
+        } catch (Exception e) {
+        }
         new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(by(locator)));
-        setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
+    }
+
+    public static void waitForPresent(String locator) {
+        Logger.debug("Waiting for presence: " + locator);
+        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(by(locator)));
     }
 
     public static void click(String locator) {
-        waitForElementVisible(locator);
         Logger.info("Clicking element '" + driver.findElement(by(locator)).getText().split("\\R", 2)[0] + "' (Located: " + locator + ")");
-        try {
-            driver.findElement(by(locator)).click();
-        } catch (StaleElementReferenceException e) {
-            driver.findElement(by(locator)).click();
-        }
+        driver.findElement(by(locator)).click();
     }
 
     public static void typeText(String locator, String text) {
-        waitForElementVisible(locator);
         Logger.info("Typing text '" + text + "' to input field (Located: " + locator + ")");
         driver.findElement(by(locator)).sendKeys(text);
     }
 
     public static String readText(String locator) {
-        waitForElementVisible(locator);
+        waitForPresent(locator);
+        Logger.info("Reading text: " + locator);
         String text = driver.findElement(by(locator)).getText();
-        Logger.info("Reading text: " + text);
+        Logger.info(text);
         return text;
     }
 
-    public static void waitForElementText(String locator, String value, int timeout) {
+    public static void waitForText(String locator, String value, int timeout) {
         Logger.debug("Waiting for text value " + value + " at " + locator);
         new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(by(locator), value));
     }
 
-    public static void softWaitForElementText(String locator, String value, int timeout) {
+    public static void softWaitForText(String locator, String value, int timeout) {
         try {
-            waitForElementText(locator, value, timeout);
+            waitForText(locator, value, timeout);
         } catch (Exception e) {
         }
     }
 
-    public static boolean isDisplayed(String locator) {
-        setImplWait(1);
-        boolean displayed = false;
-        if (isElementPresent(locator)) {
-            WebElement element = (WebElement) driver.findElements(by(locator)).get(0);
-            int xCoord = element.getLocation().getX();
-            int yCoord = element.getLocation().getY();
-            displayed = xCoord > 0 && yCoord > 0;
-            Logger.debug("Elements located " + locator + " are displayed.");
-        } else Logger.debug("Element located " + locator + " not found.");
-        setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
-        return displayed;
-    }
-
-    public static boolean isElementPresent(String locator) {
-        setImplWait(0);
+    public static boolean isPresent(String locator) {
+        Logger.debug("Checking presence of " + locator);
         boolean isPresent = driver.findElements(by(locator)).size() > 0;
-        setImplWait(COMMAND_DEFAULT_TIMEOUT_SECONDS);
         return isPresent;
-    }
-
-    public static int countElements(String locator) {
-        return driver.findElements(by(locator)).size();
-    }
-
-    public static void hoverOnElement(String locator) {
-        Logger.info("Hovering element " + locator);
-        WebElement element = driver.findElement(by(locator));
-        new Actions(driver).moveToElement(element).build().perform();
-        waitOneSec();
     }
 
     public static void takeScreenshot(String name) {
@@ -205,15 +157,15 @@ public class Bot {
             Logger.error("Failed to make screenshot");
         }
     }
+//    public static void waitOneSec() {
+//        Logger.debug("Waiting 1s");
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-    public static void waitOneSec() {
-        Logger.debug("Waiting 1s");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+//    }
 
     public static By by(Object locator) {
         if (locator instanceof String) {
@@ -230,17 +182,12 @@ public class Bot {
         } else throw new IllegalArgumentException("Locator should be String or By object");
     }
 
-    public static boolean isEmpty(String locator) {
-        return driver.findElement(by(locator)).getText().length() == 0;
-    }
-
-    public static int getXcoord(String locator) {
-        WebElement element = driver.findElement(by(locator));
-        return element.getLocation().getX() + element.getSize().getWidth() / 2;
-    }
-
-    public static int getYcoord(String locator) {
-        WebElement element = driver.findElement(by(locator));
-        return element.getLocation().getY() + element.getSize().getHeight() / 2;
+    public static void waitOneSec() {
+        Logger.debug("Waiting 1 s");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

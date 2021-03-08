@@ -5,15 +5,15 @@
             <PatternLayout
                     pattern="[%d{HH:mm:ss}] %-5p > %m%n"/>
         </Console>
-<!--        <ReportPortalLog4j2Appender name="ReportPortalAppender">-->
-<!--            <PatternLayout-->
-<!--                    pattern="[%d{HH:mm:ss}] %-5p > %m%n"/>-->
-<!--        </ReportPortalLog4j2Appender>-->
+        <!--        <ReportPortalLog4j2Appender name="ReportPortalAppender">-->
+        <!--            <PatternLayout-->
+        <!--                    pattern="[%d{HH:mm:ss}] %-5p > %m%n"/>-->
+        <!--        </ReportPortalLog4j2Appender>-->
     </Appenders>
     <Loggers>
         <Root level="DEBUG">
             <AppenderRef ref="ConsoleAppender"/>
-<!--            <AppenderRef ref="ReportPortalAppender"/>-->
+            <!--            <AppenderRef ref="ReportPortalAppender"/>-->
         </Root>
     </Loggers>
 </Configuration>
