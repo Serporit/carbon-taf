@@ -1,5 +1,7 @@
 package screens;
 
+import org.openqa.selenium.By;
+
 import static appium.Bot.*;
 
 public class LoginScreen extends AbstractScreen {
@@ -12,7 +14,7 @@ public class LoginScreen extends AbstractScreen {
     }
 
     public LoginScreen openApp() {
-        click("//android.widget.TextView[@content-desc=\"Carbon Trainer\"]");
+        click(By.xpath("//android.widget.TextView[@content-desc=\"Carbon Trainer\"]"));
         return this;
     }
 }

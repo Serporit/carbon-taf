@@ -4,7 +4,6 @@ import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import screens.LoginScreen;
 import utils.Streamer;
 
 public class AbsctractTest {
@@ -12,7 +11,6 @@ public class AbsctractTest {
     public void init() {
         Bot.init();
 //        Bot.openApp();
-        new LoginScreen().openApp().waitForLoading();
     }
 
     @AfterMethod(alwaysRun = true)

@@ -11,48 +11,30 @@ public class StartTest extends AbsctractTest {
 
     @Test
     public void fullDemoTest() {
+        new LoginScreen().openApp();
         mainScreen.startDemo().skipTimer();
         Streamer.initStreamer("detect");
         Streamer.addVideoToQueue("push");
+        String[] program = {"squat:5", "biceps:10", "kettle:10", "push:10"};
+        for (String task : program) {
+            String exercise = task.split(":")[0];
+            int goal = Integer.parseInt(task.split(":")[1]);
 
-        for (int i = 0; i < 4; i++) {
-            String exercise = workoutScreen.getExercise();
             Logger.info("Starting exercise: " + exercise);
-            int goal = workoutScreen.getGoal();
             Streamer.addVideoToQueue(exercise, goal);
             workoutScreen.waitForCounterValue(goal, goal * 3);
 
-            Logger.info("Resting");
-            Streamer.addVideoToQueue("rest");
-            workoutScreen.rest();
-        }
-        Logger.info("Score: " + new ScoreScreen().getScore());
-    }
-
-    @Test
-    public void fullDemoTestIncremental() {
-        mainScreen.startDemo().skipTimer();
-        int exercisesDone, goal;
-        workoutScreen.getGoal();
-        Streamer.initStreamer("detect");
-        Streamer.addVideoToQueue("push");
-        for (int i = 0; i < 4; i++) {
-            String exercise = workoutScreen.getExercise();
-            Logger.info("Starting exercise: " + exercise);
-            exercisesDone = 0;
-            goal = workoutScreen.getGoal();
-            while (workoutScreen.isCountPresent() && workoutScreen.getCount() < goal && exercisesDone < goal * 2) {
+            int extra = 0;
+            while (workoutScreen.getCount() < goal && extra < 5){
+                Logger.info("Making extra exercise " + exercise);
                 Streamer.addVideoToQueue(exercise);
-                exercisesDone++;
-                workoutScreen.waitForCounterValue(exercisesDone, 3);
+                workoutScreen.waitForCounterValue(goal, 3);
+                extra ++;
             }
-            Logger.info(String.format("Exercises done: %s, Needed: %s", exercisesDone, goal));
 
             Logger.info("Resting");
-            Streamer.addVideoToQueue("rest");
             workoutScreen.rest();
         }
         Logger.info("Score: " + new ScoreScreen().getScore());
     }
-
 }

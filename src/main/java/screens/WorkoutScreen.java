@@ -11,9 +11,7 @@ public class WorkoutScreen extends AbstractScreen {
     private static String exercise = "com.clearstone.rise:id/tv_name";
 
     public int getCount() {
-        if (isPresent(counter)) {
-            return Integer.parseInt(readText(counter));
-        } else return -1;
+        return Integer.parseInt(readText(counter));
     }
 
     public int getGoal() {
@@ -21,6 +19,7 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public void rest() {
+        waitOneSec();
         waitForDisappear(restTimer, 15);
         waitOneSec();
     }
