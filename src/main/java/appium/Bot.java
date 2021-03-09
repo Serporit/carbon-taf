@@ -23,7 +23,6 @@ import java.net.URL;
 public class Bot {
     private static AndroidDriver driver;
     private static final int WAIT_ELEMENT_TIMEOUT = 5;
-    //    private static final int COMMAND_DEFAULT_TIMEOUT_SECONDS = 5;
     private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
 
     public static void init() {
@@ -31,11 +30,6 @@ public class Bot {
             driver = initDriver();
         }
     }
-
-//    public static void initWithReset() {
-//        resetAppData();
-//        init();
-//    }
 
     private static AndroidDriver initDriver() {
         Logger.info("Init appium driver");
@@ -45,43 +39,19 @@ public class Bot {
         caps.setCapability("platformName", "Android");
         caps.setCapability("platformVersion", "10");
         caps.setCapability("automationName", "UiAutomator2");
-//        caps.setCapability("automationName", "Espresso");
-//        caps.setCapability("appPackage", "com.clearstone.rise");
-//        caps.setCapability("app", "com.clearstone.rise");
         try {
             return new AndroidDriver<MobileElement>(new URL("http://192.168.0.200:4723/wd/hub"), caps);
-            //driver.context("NATIVE_APP");
-            //driver.context("WEBVIEW_chrome");
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-//    public static void resetAppData() {
-//        DesiredCapabilities caps = new DesiredCapabilities();
-//        caps.setCapability("deviceName", "OnePlus7Pro");
-//        caps.setCapability("udid", "379285fb");
-//        caps.setCapability("platformName", "Android");
-//        caps.setCapability("platformVersion", "10");
-//        caps.setCapability("automationName", "UiAutomator2");
-//        caps.setCapability("automationName", "UiAutomator2");
-//        caps.setCapability("appPackage", "com.clearstone.rise");
-//        caps.setCapability("appActivity", "com.clearstone.rise/.ui.activity.MainActivity");
-//        try {
-//            driver = new AndroidDriver<AndroidElement>(new URL("http://0.0.0.0:4723/wd/hub"), caps);
-//            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-//            driver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
-//            driver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-//        } catch (Exception e) {
-//            driver = null;
-//        }
-//    }
-
     public static void openApp() {
         Logger.debug("Opening app");
         driver.startActivity(new Activity("com.clearstone.rise", ".ui.activity.MainActivity"));
     }
+
     public static void pressHome() {
         driver.pressKey(new KeyEvent(AndroidKey.HOME));
     }
@@ -98,33 +68,27 @@ public class Bot {
 
     public static void waitForDisappear(String locator, int timeoutSeconds) {
         Logger.debug("Waiting for disappear: " + locator);
-        try {
-            new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
-        } catch (Exception e) {
-        }
         new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(By.id(locator)));
     }
 
     public static AndroidElement waitForPresent(String locator) {
         Logger.debug("Waiting for presence: " + locator);
-//        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(by(locator)));
         return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
     }
 
     public static void click(String locator) {
         Logger.info("Clicking element: " + locator);
-//        driver.findElement(by(locator)).click();
         getAndroidElement(locator).click();
     }
 
     public static void click(By locator) {
         Logger.info("Clicking element: " + locator);
-//        driver.findElement(by(locator)).click();
-        driver.findElement(locator).click();
+        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(locator)).click();
     }
 
     private static AndroidElement getAndroidElement(String locator) {
-        return (AndroidElement) driver.findElementById(locator);
+//        return (AndroidElement) driver.findElementById(locator);
+        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
     }
 
     public static void typeText(String locator, String text) {
@@ -133,21 +97,20 @@ public class Bot {
     }
 
     public static String readText(String locator) {
-//        waitForPresent(locator);
         Logger.debug("Reading text: " + locator);
         String text = getAndroidElement(locator).getText();
         Logger.debug(text);
         return text;
     }
 
-    public static void waitForText(String locator, String value, int timeout) {
-        Logger.debug("Waiting for text value " + value + " at " + locator);
+    public static void waitElementTextToBe(String locator, String value, int timeout) {
+        Logger.debug("Waiting for text value " + value + " at " + locator + " (timeout: " + timeout + "s)");
         new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(locator), value));
     }
 
-    public static void softWaitForText(String locator, String value, int timeout) {
+    public static void softWaitElementTextToBe(String locator, String value, int timeout) {
         try {
-            waitForText(locator, value, timeout);
+            waitElementTextToBe(locator, value, timeout);
         } catch (Exception e) {
         }
     }
@@ -168,15 +131,6 @@ public class Bot {
 //            Logger.attach(scrPath, "Screenshot");
         } catch (IOException e) {
             Logger.error("Failed to make screenshot");
-        }
-    }
-
-    public static void waitOneSec() {
-//        Logger.debug("Waiting 1 s");
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

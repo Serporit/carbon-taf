@@ -18,10 +18,9 @@ public class WorkoutScreen extends AbstractScreen {
         return Integer.parseInt(readText(goalCount));
     }
 
-    public void rest() {
-        waitOneSec();
+    public void waitRest() {
+        waitForPresent(restTimer);
         waitForDisappear(restTimer, 15);
-        waitOneSec();
     }
 
     public boolean isCountPresent() {
@@ -33,6 +32,6 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public void waitForCounterValue(int goal, int timeout) {
-        Bot.softWaitForText(counter, String.valueOf(goal), timeout);
+        Bot.softWaitElementTextToBe(counter, String.valueOf(goal), timeout);
     }
 }
