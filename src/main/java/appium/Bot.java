@@ -19,19 +19,22 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class Bot {
-    private static AndroidDriver driver;
+    private static AndroidDriver<MobileElement> driver;
     private static final int WAIT_ELEMENT_TIMEOUT = 5;
+    private static final int IMPLICIT_WAIT = 0;
     private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
 
     public static void init() {
         if (driver == null) {
-            driver = initDriver();
+            initDriver();
         }
     }
 
-    private static AndroidDriver initDriver() {
+    private static void initDriver() {
         Logger.info("Init appium driver");
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("deviceName", "OnePlus7Pro");
@@ -39,12 +42,15 @@ public class Bot {
         caps.setCapability("platformName", "Android");
         caps.setCapability("platformVersion", "10");
         caps.setCapability("automationName", "UiAutomator2");
+
+        URL remoteAddress = null;
         try {
-            return new AndroidDriver<MobileElement>(new URL("http://192.168.0.200:4723/wd/hub"), caps);
+            remoteAddress = new URL("http://192.168.0.200:4723/wd/hub");
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            return null;
         }
+        driver = new AndroidDriver<MobileElement>(Objects.requireNonNull(remoteAddress), caps);
+        driver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
     }
 
     public static void openApp() {
@@ -87,8 +93,8 @@ public class Bot {
     }
 
     private static AndroidElement getAndroidElement(String locator) {
-//        return (AndroidElement) driver.findElementById(locator);
-        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
+        return (AndroidElement) driver.findElementById(locator);
+//        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
     }
 
     public static void typeText(String locator, String text) {

@@ -15,6 +15,7 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public int getGoal() {
+        waitForPresent(goalCount);
         return Integer.parseInt(readText(goalCount));
     }
 

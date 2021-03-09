@@ -19,8 +19,7 @@ public class StartTest extends AbsctractTest {
     public void start() {
         loginScreen.openApp();
         mainScreen.startDemo().skipTimer();
-        Streamer.initStreamer("detect");
-        Streamer.addVideoToQueue("biceps");
+        Streamer.initStreamer("detect2");
     }
 
     @Test(dataProvider = "exercises")
@@ -53,5 +52,30 @@ public class StartTest extends AbsctractTest {
                 {"push", 10},
         };
     }
+
+//    @Test
+//    public void fullDemoTestIncremental() {
+//        for (int i = 0; i < 4; i++) {
+//            int times = workoutScreen.getGoal();
+//            String exercise = workoutScreen.getExercise();
+//            Logger.info("Starting exercise: " + exercise);
+//            Streamer.addVideoToQueue(exercise, times);
+//            workoutScreen.waitForCounterValue(times, times * EXERCISE_DURATION);
+//
+//            int extra = 0;
+//            while (workoutScreen.getCount() < times && extra < MAXIMUM_EXTRA_EXERCISES) {
+//                Logger.info("Making extra exercise " + exercise);
+//                Streamer.addVideoToQueue(exercise);
+//                workoutScreen.waitForCounterValue(times, EXERCISE_DURATION);
+//                extra++;
+//            }
+//
+//            if (extra == 0) {
+//                Logger.info("Resting");
+//                workoutScreen.waitRest();
+//            }
+//        }
+//        Logger.info("Score: " + new ScoreScreen().getScore());
+//    }
 
 }
