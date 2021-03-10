@@ -1,6 +1,5 @@
 package appium;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
@@ -23,8 +22,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Bot {
-    private static AndroidDriver<MobileElement> driver;
-    private static final int WAIT_ELEMENT_TIMEOUT = 5;
+    private static AndroidDriver<AndroidElement> driver;
+    private static final int WAIT_ELEMENT_TIMEOUT = 10;
     private static final int IMPLICIT_WAIT = 0;
     private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
 
@@ -49,7 +48,7 @@ public class Bot {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        driver = new AndroidDriver<MobileElement>(Objects.requireNonNull(remoteAddress), caps);
+        driver = new AndroidDriver<AndroidElement>(Objects.requireNonNull(remoteAddress), caps);
         driver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
     }
 
@@ -68,62 +67,67 @@ public class Bot {
         driver.pressKey(new KeyEvent(AndroidKey.BACK));
     }
 
-    public static void waitForDisappear(String locator) {
-        waitForDisappear(locator, WAIT_ELEMENT_TIMEOUT);
+    public static void waitForDisappear(String elementId) {
+        waitForDisappear(elementId, WAIT_ELEMENT_TIMEOUT);
     }
 
-    public static void waitForDisappear(String locator, int timeoutSeconds) {
-        Logger.debug("Waiting for disappear: " + locator);
-        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(By.id(locator)));
+    public static void waitForDisappear(String elementId, int timeoutSeconds) {
+        Logger.debug("Waiting for disappear: " + elementId);
+        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(By.id(elementId)));
     }
 
-    public static AndroidElement waitForPresent(String locator) {
-        Logger.debug("Waiting for presence: " + locator);
-        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
+    public static AndroidElement waitForPresent(String elementId) {
+        Logger.debug("Waiting for presence: " + elementId);
+        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(elementId)));
     }
 
-    public static void click(String locator) {
-        Logger.info("Clicking element: " + locator);
-        getAndroidElement(locator).click();
+    public static void click(String elementId) {
+        Logger.info("Clicking element: " + elementId);
+        getAndroidElement(elementId).click();
     }
 
     public static void click(By locator) {
         Logger.info("Clicking element: " + locator);
-        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(locator)).click();
+        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(locator)).click();
     }
 
-    private static AndroidElement getAndroidElement(String locator) {
-        return (AndroidElement) driver.findElementById(locator);
-//        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(locator)));
+    private static AndroidElement getAndroidElement(String elementId) {
+        return (AndroidElement) driver.findElementById(elementId);
+//        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(elementId)));
     }
 
-    public static void typeText(String locator, String text) {
-        Logger.info("Typing text '" + text + "' to input field (Located: " + locator + ")");
-        getAndroidElement(locator).sendKeys(text);
+    public static void typeText(String elementId, String text) {
+        Logger.info("Typing text '" + text + "' to input field (Located: " + elementId + ")");
+        getAndroidElement(elementId).sendKeys(text);
     }
 
-    public static String readText(String locator) {
-        Logger.debug("Reading text: " + locator);
-        String text = getAndroidElement(locator).getText();
+    public static String readText(String elementId) {
+        Logger.debug("Reading text: " + elementId);
+        String text = getAndroidElement(elementId).getText();
         Logger.debug(text);
         return text;
     }
 
-    public static void waitElementTextToBe(String locator, String value, int timeout) {
-        Logger.debug("Waiting for text value " + value + " at " + locator + " (timeout: " + timeout + "s)");
-        new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(locator), value));
+    public static void waitElementTextToBe(String elementId, String value, int timeout) {
+        Logger.debug("Waiting for text value " + value + " at " + elementId + " (timeout: " + timeout + "s)");
+        new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(elementId), value));
     }
 
-    public static void softWaitElementTextToBe(String locator, String value, int timeout) {
+    public static void softWaitElementTextToBe(String elementId, String value, int timeout) {
         try {
-            waitElementTextToBe(locator, value, timeout);
+            waitElementTextToBe(elementId, value, timeout);
         } catch (Exception e) {
         }
     }
 
-    public static boolean isPresent(String locator) {
+    public static boolean isPresent(String elementId) {
+        Logger.debug("Checking presence of " + elementId);
+        return driver.findElements(By.id(elementId)).size() > 0;
+    }
+
+    public static boolean isPresent(By locator) {
         Logger.debug("Checking presence of " + locator);
-        return driver.findElements(By.id(locator)).size() > 0;
+        return driver.findElements(locator).size() > 0;
     }
 
     public static void takeScreenshot(String name) {
@@ -138,5 +142,14 @@ public class Bot {
         } catch (IOException e) {
             Logger.error("Failed to make screenshot");
         }
+    }
+
+    public static void logCurrentActivity() {
+        Logger.debug("Current activity: " + driver.currentActivity());
+    }
+
+    public static AndroidElement waitForPresent(By locator) {
+        Logger.debug("Waiting for presence: " + locator);
+        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 }
