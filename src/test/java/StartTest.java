@@ -40,16 +40,15 @@ public class StartTest extends AbsctractTest {
             workoutScreen.waitIfCounterValue(times, EXERCISE_TIMEOUT);
             extra++;
         }
-//***
         if (workoutScreen.isExerciseComplete()) {
             Logger.info("Resting");
             if (exercise.equals("kettle")) Streamer.addVideoToQueue("kettle-0");
             if (exercise.equals("push")) Streamer.addVideoToQueue("push-0");
             workoutScreen.waitRest();
         }
-//        if (scoreScreen.isActive()) {
-//
-//        }
+        if (scoreScreen.isActive()) {
+            Logger.info("Workoup complete. Score: " + scoreScreen.getScore());
+        }
         Assert.assertEquals(extra, 0, extra + " extra exercises were made.");
     }
 

@@ -152,4 +152,11 @@ public class Bot {
         Logger.debug("Waiting for presence: " + locator);
         return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
+
+    public static void softWaitForPresent(By locator) {
+        try {
+            waitForPresent(locator);
+        } catch (Exception e) {
+        }
+    }
 }

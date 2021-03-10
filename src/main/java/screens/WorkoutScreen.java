@@ -39,7 +39,7 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public boolean isExerciseComplete() {
-        waitForPresent(REST_MESSAGE_LOCATOR);
+        softWaitForPresent(REST_MESSAGE_LOCATOR);
         return isPresent(REST_MESSAGE_LOCATOR);
     }
 }
