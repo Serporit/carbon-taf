@@ -22,8 +22,8 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public void waitRest() {
-        waitForPresent(REST_TIMER_ID);
-        waitForDisappear(REST_TIMER_ID, 15);
+//        waitForPresent(REST_TIMER_ID);
+        Bot.waitForDisappear(REST_TIMER_ID, 15);
     }
 
     public boolean isCountPresent() {
@@ -34,8 +34,8 @@ public class WorkoutScreen extends AbstractScreen {
         return readText(EXERCISE_NAME_ID).replaceAll(" ", "").toLowerCase();
     }
 
-    public void waitIfCounterValue(int goal, int timeout) {
-        Bot.softWaitElementTextToBe(COUNTER_ID, String.valueOf(goal), timeout);
+    public void waitForCounterValue(int goal, int timeout) {
+        softWaitElementTextToBe(COUNTER_ID, String.valueOf(goal), timeout);
     }
 
     public boolean isExerciseComplete() {

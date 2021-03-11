@@ -22,8 +22,8 @@ public class AbsctractTest {
 
     @AfterSuite(alwaysRun = true)
     public void tearDown() {
+        Logger.info("Closing the app");
         Streamer.close();
-        Logger.debug("Closing the app");
         Bot.closeApp();
     }
 }
