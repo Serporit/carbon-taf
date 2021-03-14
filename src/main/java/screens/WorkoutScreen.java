@@ -10,7 +10,9 @@ public class WorkoutScreen extends AbstractScreen {
     private final static String REST_TIMER_ID = "com.clearstone.rise:id/blockTimer";
     private final static String GOAL_COUNT_ID = "com.clearstone.rise:id/countExercise";
     private final static String EXERCISE_NAME_ID = "com.clearstone.rise:id/tv_name";
-    private final static By REST_MESSAGE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS']");
+    private final static By EXERCISE_DONE_MESSAGE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS'] | //*[@resource-id='com.clearstone.rise:id/chart_volume']");
+    // chart_volume
+    // tv_total_volume_label_chart
 
     public int getCount() {
         return Integer.parseInt(readText(COUNTER_ID));
@@ -39,7 +41,7 @@ public class WorkoutScreen extends AbstractScreen {
     }
 
     public boolean isExerciseComplete() {
-        softWaitForPresent(REST_MESSAGE_LOCATOR);
-        return isPresent(REST_MESSAGE_LOCATOR);
+        softWaitForPresent(EXERCISE_DONE_MESSAGE_LOCATOR);
+        return isPresent(EXERCISE_DONE_MESSAGE_LOCATOR);
     }
 }

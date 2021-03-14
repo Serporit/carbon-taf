@@ -18,14 +18,14 @@ public class ExercisesTest extends AbsctractTest {
     @BeforeClass
     public void start() {
         loginScreen.openApp();
-        mainScreen.startDemo().skipTimer();
+        mainScreen.startBaseDemo().skipTimer();
         Streamer.initStreamer("init");
     }
 
-    @Test(dataProvider = "exercises")
-    public void exerciseTest(String exercise, int times) {
+    @Test(dataProvider = "baseDemoExercises")
+    public void baseDemoExerciseTest(String exercise, int times) {
         Logger.info("Starting exercise: " + exercise);
-        Streamer.addVideoToQueue("before-" + exercise);
+        Streamer.addVideoToQueue("before_" + exercise);
         Streamer.addVideoToQueue(exercise, times);
         workoutScreen.waitForCounterValue(times, times * EXERCISE_TIMEOUT);
 
@@ -44,12 +44,25 @@ public class ExercisesTest extends AbsctractTest {
     }
 
     @DataProvider
-    public Object[][] exercises() {
+    public Object[][] baseDemoExercises() {
         return new Object[][]{
-                {"squat", 5},
-                {"biceps", 10},
-                {"kettle", 10},
-                {"push", 10},
+                {"air_squat", 5},
+                {"dumbbell_biceps", 10},
+                {"kettlebell_swing", 10},
+                {"dumbbell_push_press", 10}
         };
     }
+
+//    @DataProvider
+//    public Object[][] newDemoExercises() {
+//        return new Object[][]{
+//                {"dumbbell_deadlift", 5},
+//                {"barbell_deadlift", 5},
+//                {"dumbbell_thruster", 5},
+//                {"barbell_thruster", 5},
+//                {"jumping_jack", 5},
+//                {"pull_apart", 5},
+//
+//        };
+//    }
 }
