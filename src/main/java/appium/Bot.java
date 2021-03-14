@@ -62,9 +62,8 @@ public class Bot {
     }
 
     public static void closeApp() {
-        driver.pressKey(new KeyEvent(AndroidKey.BACK));
-        driver.pressKey(new KeyEvent(AndroidKey.BACK));
-        driver.pressKey(new KeyEvent(AndroidKey.BACK));
+        driver.pressKey(new KeyEvent(AndroidKey.APP_SWITCH));
+        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.id("net.oneplus.launcher:id/clear_all_button"))).click();
     }
 
     public static void waitForDisappear(String elementId) {
