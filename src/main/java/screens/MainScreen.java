@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 
 import static appium.Bot.click;
 
-public class MainScreen extends AbstractScreen {
+public class MainScreen {
 
     public static final String START_BUTTON_ID = "com.clearstone.rise:id/btn_launching";
     public static final By BASE_DEMO_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[1]");

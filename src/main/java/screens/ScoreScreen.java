@@ -4,8 +4,8 @@ import appium.Bot;
 
 import static appium.Bot.isPresent;
 
-public class ScoreScreen extends AbstractScreen {
-    private static String score = "com.clearstone.rise:id/tv_total_volume_value";
+public class ScoreScreen {
+    private static final String score = "com.clearstone.rise:id/tv_total_volume_value";
 
     // com.clearstone.rise:id/tv_call
     //com.clearstone.rise:id/tv_total_volume_label_chart  ("TOTAL VOLUME TODAY")
