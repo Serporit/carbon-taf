@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 
 import static appium.Bot.*;
 
-public class WorkoutScreen extends AbstractScreen {
+public class WorkoutScreen {
     private final static String COUNTER_ID = "com.clearstone.rise:id/tv_count";
     private final static String REST_TIMER_ID = "com.clearstone.rise:id/blockTimer";
     private final static String GOAL_COUNT_ID = "com.clearstone.rise:id/countExercise";

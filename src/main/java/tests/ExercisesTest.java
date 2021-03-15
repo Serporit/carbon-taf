@@ -1,3 +1,5 @@
+package tests;
+
 import logging.Logger;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

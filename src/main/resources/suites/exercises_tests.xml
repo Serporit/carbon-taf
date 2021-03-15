@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Carbon Tests">
+
+    <listeners>
+        <listener class-name="logging.Listener"/>
+    </listeners>
+
+    <test verbose="1" name="Exercises test">
+        <classes>
+            <class name="tests.ExercisesTest"/>
+        </classes>
+    </test>
+</suite>

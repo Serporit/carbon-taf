@@ -1,4 +1,4 @@
 package screens;
 
-public class StatsSceen extends AbstractScreen {
+public class StatsSceen {
 }

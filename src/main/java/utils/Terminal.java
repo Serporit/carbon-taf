@@ -23,7 +23,7 @@ public class Terminal {
         };
         try {
 //            Process p =
-                    Runtime.getRuntime().exec(cmd);
+            Runtime.getRuntime().exec(cmd);
 //            p.waitFor();
 
 //            InputStream i = p.getInputStream();
