@@ -6,7 +6,6 @@ import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import logging.Logger;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -15,17 +14,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class Bot {
-    private static AndroidDriver<AndroidElement> driver;
     private static final int WAIT_ELEMENT_TIMEOUT = 10;
     private static final int IMPLICIT_WAIT = 0;
     private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
+    private static AndroidDriver<AndroidElement> driver;
 
     public static void init() {
         if (driver == null) {
@@ -135,16 +133,16 @@ public class Bot {
 
     public static void takeScreenshot(String name) {
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        try {
-            String screenshotName = SCREENSHOTS_NAME_TPL + name;
-            String scrPath = screenshotName + ".jpg";
-            File copy = new File(scrPath);
-            FileUtils.copyFile(screenshot, copy);
-            Logger.debug("Saved screenshot: " + screenshotName);
-//            Logger.attach(scrPath, "Screenshot");
-        } catch (IOException e) {
-            Logger.error("Failed to make screenshot");
-        }
+//        try {
+//            String screenshotName = SCREENSHOTS_NAME_TPL + name;
+//            String scrPath = screenshotName + ".jpg";
+//            File copy = new File(scrPath);
+//            FileUtils.copyFile(screenshot, copy);
+        Logger.debug("Saved screenshot: " + screenshot.getName());
+        Logger.attach(screenshot.getAbsolutePath(), "Screenshot");
+//        } catch (IOException e) {
+//            Logger.error("Failed to make screenshot");
+//        }
     }
 
     public static void logCurrentActivity() {

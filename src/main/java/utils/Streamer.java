@@ -10,7 +10,7 @@ public class Streamer {
 
     public static void addVideoToQueue(String exercise) {
         Logger.debug("Steaming video: " + exercise);
-        Terminal.execute("echo \"/home/zerg/Videos/" + exercise +".mp4\" >> /home/zerg/z2s.cfg");
+        Terminal.execute("echo \"/home/zerg/Videos/" + exercise + ".mp4\" >> /home/zerg/z2s.cfg");
     }
 
     public static void addVideoToQueue(String exercise, int repeats) {
@@ -18,7 +18,7 @@ public class Streamer {
         if (repeats <= 0) {
             throw new IllegalArgumentException("repeats should be positive integer");
         }
-        String command = "echo \"/home/zerg/Videos/" + exercise +".mp4\" >> /home/zerg/z2s.cfg";
+        String command = "echo \"/home/zerg/Videos/" + exercise + ".mp4\" >> /home/zerg/z2s.cfg";
         for (int i = 0; i < repeats; i++) {
             Terminal.execute(command);
         }

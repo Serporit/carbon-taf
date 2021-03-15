@@ -2,7 +2,7 @@ package screens;
 
 import static appium.Bot.click;
 
-public class PermissionScreen extends AbstractScreen {
+public class PermissionScreen {
     private final static String ALLOW_ALWAYS_BUTTON = "com.android.permissioncontroller:id/permission_allow_always_button";
     private final static String ALLOW_BUTTON = "com.android.permissioncontroller:id/permission_allow_button";
 
