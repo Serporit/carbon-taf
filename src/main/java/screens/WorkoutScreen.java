@@ -10,7 +10,9 @@ public class WorkoutScreen {
     private final static String REST_TIMER_ID = "com.clearstone.rise:id/blockTimer";
     private final static String GOAL_COUNT_ID = "com.clearstone.rise:id/countExercise";
     private final static String EXERCISE_NAME_ID = "com.clearstone.rise:id/tv_name";
-    private final static By EXERCISE_DONE_MESSAGE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS'] | //*[@resource-id='com.clearstone.rise:id/chart_volume']");
+    private final static By EXERCISE_DONE_MARKER_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS'] | //*[@resource-id='com.clearstone.rise:id/chart_volume']");
+    private final static String SCORE_ID = "com.clearstone.rise:id/chart_volume";
+    private final static By REST_MESSAGE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS']");
     // chart_volume
     // tv_total_volume_label_chart
 
@@ -25,7 +27,7 @@ public class WorkoutScreen {
 
     public void waitRest() {
 //        waitForPresent(REST_TIMER_ID);
-        Bot.waitForDisappear(REST_TIMER_ID, 15);
+        Bot.waitForDisappear(REST_MESSAGE_LOCATOR, 15);
     }
 
     public boolean isCountPresent() {
@@ -41,7 +43,6 @@ public class WorkoutScreen {
     }
 
     public boolean isExerciseComplete() {
-        softWaitForPresent(EXERCISE_DONE_MESSAGE_LOCATOR);
-        return isPresent(EXERCISE_DONE_MESSAGE_LOCATOR);
+        return isPresent(REST_MESSAGE_LOCATOR) || isPresent(SCORE_ID);
     }
 }

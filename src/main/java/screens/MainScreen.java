@@ -10,7 +10,7 @@ public class MainScreen {
     public static final By BASE_DEMO_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[1]");
     public static final By NEW_DEMO_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[5]");
 
-    public TimerScreen startTraining() {
+    public TimerScreen startDailyTraining() {
         click(START_BUTTON_ID);
         return new TimerScreen();
     }

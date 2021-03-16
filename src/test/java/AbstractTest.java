@@ -6,11 +6,11 @@ import utils.Streamer;
 
 
 //@Listeners(Listener.class)
-public class AbsctractTest {
+public class AbstractTest {
+
     @BeforeSuite
     public void init() {
         Bot.init();
-//        Bot.openApp();
     }
 
     @AfterSuite(alwaysRun = true)
@@ -18,5 +18,6 @@ public class AbsctractTest {
         Logger.info("Closing the app");
         Streamer.close();
         Bot.closeApp();
+        Bot.quit();
     }
 }

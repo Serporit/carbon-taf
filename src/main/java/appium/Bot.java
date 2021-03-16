@@ -1,6 +1,5 @@
 package appium;
 
-import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
@@ -9,20 +8,18 @@ import logging.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import static appium.CapabilityManager.getCapabilities;
+import static appium.CapabilityManager.getRemoteAddress;
 
 public class Bot {
     private static final int WAIT_ELEMENT_TIMEOUT = 10;
     private static final int IMPLICIT_WAIT = 0;
-    private static final String SCREENSHOTS_NAME_TPL = "screenshots/";
     private static AndroidDriver<AndroidElement> driver;
 
     public static void init() {
@@ -33,35 +30,22 @@ public class Bot {
 
     private static void initDriver() {
         Logger.debug("Init appium driver");
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setCapability("deviceName", "OnePlus7Pro");
-        caps.setCapability("udid", "379285fb");
-        caps.setCapability("platformName", "Android");
-        caps.setCapability("platformVersion", "10");
-        caps.setCapability("automationName", "UiAutomator2");
-
-        URL remoteAddress = null;
-        try {
-            remoteAddress = new URL("http://192.168.0.200:4723/wd/hub");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        driver = new AndroidDriver<AndroidElement>(Objects.requireNonNull(remoteAddress), caps);
+        driver = new AndroidDriver<AndroidElement>(getRemoteAddress(), getCapabilities());
         driver.manage().timeouts().implicitlyWait(IMPLICIT_WAIT, TimeUnit.SECONDS);
     }
 
-    public static void openApp() {
-        Logger.debug("Opening app");
-        driver.startActivity(new Activity("com.clearstone.rise", ".ui.activity.MainActivity"));
+    public static void launchApp() {
+        Logger.debug("Launching app");
+        driver.launchApp();
+    }
+
+    public static void closeApp() {
+        Logger.debug("Closing app");
+        driver.closeApp();
     }
 
     public static void pressHome() {
         driver.pressKey(new KeyEvent(AndroidKey.HOME));
-    }
-
-    public static void closeApp() {
-        driver.pressKey(new KeyEvent(AndroidKey.APP_SWITCH));
-        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(By.id("net.oneplus.launcher:id/clear_all_button"))).click();
     }
 
     public static void waitForDisappear(String elementId) {
@@ -110,7 +94,7 @@ public class Bot {
     }
 
     public static void waitElementTextToBe(String elementId, String value, int timeout) {
-        Logger.debug("Waiting for text value " + value + " at " + elementId + " (timeout: " + timeout + "s)");
+        Logger.debug("Waiting for value \"" + value + "\" at " + elementId + " (timeout: " + timeout + "s)");
         new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(elementId), value));
     }
 
@@ -118,6 +102,7 @@ public class Bot {
         try {
             waitElementTextToBe(elementId, value, timeout);
         } catch (Exception e) {
+            Logger.debug("Value did not match");
         }
     }
 
@@ -133,16 +118,8 @@ public class Bot {
 
     public static void takeScreenshot(String name) {
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-//        try {
-//            String screenshotName = SCREENSHOTS_NAME_TPL + name;
-//            String scrPath = screenshotName + ".jpg";
-//            File copy = new File(scrPath);
-//            FileUtils.copyFile(screenshot, copy);
-        Logger.debug("Saved screenshot: " + screenshot.getName());
-        Logger.attach(screenshot.getAbsolutePath(), "Screenshot");
-//        } catch (IOException e) {
-//            Logger.error("Failed to make screenshot");
-//        }
+        Logger.debug("Saved screenshot: " + name);
+        Logger.attach(screenshot.getAbsolutePath(), name);
     }
 
     public static void logCurrentActivity() {
@@ -150,14 +127,23 @@ public class Bot {
     }
 
     public static AndroidElement waitForPresent(By locator) {
+        return waitForPresent(locator, WAIT_ELEMENT_TIMEOUT);
+    }
+
+    public static AndroidElement waitForPresent(By locator, int timeout) {
         Logger.debug("Waiting for presence: " + locator);
-        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(locator));
+        return (AndroidElement) new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     public static void softWaitForPresent(By locator) {
         try {
             waitForPresent(locator);
         } catch (Exception e) {
+            Logger.debug("Element not appeared");
         }
+    }
+
+    public static void quit() {
+        driver.quit();
     }
 }
