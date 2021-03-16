@@ -5,7 +5,6 @@ import org.testng.annotations.BeforeSuite;
 import utils.Streamer;
 
 
-//@Listeners(Listener.class)
 public class AbstractTest {
 
     @BeforeSuite

@@ -1,22 +1,22 @@
 import logging.Logger;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import screens.LoginScreen;
 import screens.MainScreen;
 import screens.WorkoutScreen;
+import steps.CommonSteps;
 import utils.Streamer;
 
 public class NewExercisesTest extends AbstractTest {
-    public static final int MAXIMUM_EXTRA_EXERCISES = 5;
-    public static final int EXERCISE_TIMEOUT = 3;
     private final LoginScreen loginScreen = new LoginScreen();
     private final MainScreen mainScreen = new MainScreen();
     private final WorkoutScreen workoutScreen = new WorkoutScreen();
 
     @BeforeClass
-    public void start() {
+    public void startNewDemoWorkout() {
         loginScreen.startApp();
         mainScreen.startNewDemo().skipTimer();
         Streamer.initStreamer("init");
@@ -24,23 +24,16 @@ public class NewExercisesTest extends AbstractTest {
 
     @Test(dataProvider = "newDemoExercises")
     public void baseDemoExerciseTest(String exercise, int times) {
-        Logger.info("Starting exercise: " + exercise);
-        Streamer.addVideoToQueue("before_" + exercise);
-        Streamer.addVideoToQueue(exercise, times);
-        workoutScreen.waitForCounterValue(times, times * EXERCISE_TIMEOUT);
+        int extra = CommonSteps.repeatExerciseAndCountExtra(exercise, times);
+        Assert.assertEquals(extra, 0, extra + " extra exercises were made.");
+    }
 
-        int extra = 0;
-        while (workoutScreen.getCount() < times && extra < MAXIMUM_EXTRA_EXERCISES) {
-            Logger.info("Making extra exercise " + exercise);
-            Streamer.addVideoToQueue(exercise);
-            workoutScreen.waitForCounterValue(times, EXERCISE_TIMEOUT);
-            extra++;
-        }
+    @AfterMethod
+    public void afterExercise() {
         if (workoutScreen.isExerciseComplete()) {
             Logger.info("Resting");
             workoutScreen.waitRest();
         }
-        Assert.assertEquals(extra, 0, extra + " extra exercises were made.");
     }
 
     @DataProvider
