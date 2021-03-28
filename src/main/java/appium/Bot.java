@@ -1,17 +1,22 @@
 package appium;
 
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import logging.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 import static appium.CapabilityManager.getCapabilities;
@@ -130,6 +135,11 @@ public class Bot {
         return waitForPresent(locator, WAIT_ELEMENT_TIMEOUT);
     }
 
+    public static AndroidElement waitForPresent(String elementId, int timeout) {
+        Logger.debug("Waiting for presence: " + elementId);
+        return (AndroidElement) new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(By.id(elementId)));
+    }
+
     public static AndroidElement waitForPresent(By locator, int timeout) {
         Logger.debug("Waiting for presence: " + locator);
         return (AndroidElement) new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -145,5 +155,25 @@ public class Bot {
 
     public static void quit() {
         driver.quit();
+    }
+
+    public static void scrollUp(By elementFrom, int pixels) {
+        Point point = driver.findElement(elementFrom).getCenter();
+        Point pointUp = new Point(point.x, point.y - pixels);
+        new TouchAction(driver)
+                .press( PointOption.point(point))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(500)))
+                .moveTo(PointOption.point(pointUp))
+                .release()
+                .perform();
+    }
+
+    public static void scrollFast(By elementFrom, By elementTo) {
+        new TouchAction(driver)
+                .press(PointOption.point(driver.findElement(elementFrom).getCenter()))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(100)))
+                .moveTo(PointOption.point(driver.findElement(elementTo).getCenter()))
+                .release()
+                .perform();
     }
 }

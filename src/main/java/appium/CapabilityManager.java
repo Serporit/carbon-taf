@@ -8,10 +8,9 @@ import java.net.URL;
 public class CapabilityManager {
     public static DesiredCapabilities getCapabilities() {
         DesiredCapabilities caps = new DesiredCapabilities();
-//        caps.setCapability("deviceName", "OnePlus7Pro");
-//        caps.setCapability("udid", "379285fb");
         caps.setCapability("platformName", "Android");
-        caps.setCapability("platformVersion", "10");
+//        caps.setCapability("platformVersion", "11");
+        caps.setCapability("newCommandTimeout", 1800); // for debug only
         caps.setCapability("automationName", "UiAutomator2");
         caps.setCapability("appPackage", "com.clearstone.rise");
         caps.setCapability("appActivity", ".ui.activity.splash.SplashActivity");
@@ -19,12 +18,14 @@ public class CapabilityManager {
 //        caps.setCapability("appWaitActivity", "com.clearstone.rise.*");
 //        caps.setCapability("newCommandTimeout", 180);
         caps.setCapability("autoLaunch", false);
+        caps.setCapability("skipUnlock", true);
 
         // use installed app:
         caps.setCapability("noReset", true);
 
         // re-install app:
 //        caps.setCapability("app", "d:/rise-v0.9.168-debug.apk");
+//        caps.setCapability("fullReset", true);
 //        caps.setCapability("enforceAppInstall", true);
 //        caps.setCapability("autoGrantPermissions", true); // does not work with noReset = true
         return caps;
