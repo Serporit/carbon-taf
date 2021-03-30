@@ -1,16 +1,11 @@
-import logging.Logger;
 import org.testng.Assert;
-import org.testng.annotations.*;
-import screens.LoginScreen;
-import screens.MainScreen;
-import screens.WorkoutScreen;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import steps.CommonSteps;
 import utils.Streamer;
 
 public class BaseExercisesTest extends AbstractTest {
-    private final LoginScreen loginScreen = new LoginScreen();
-    private final MainScreen mainScreen = new MainScreen();
-    private final WorkoutScreen workoutScreen = new WorkoutScreen();
 
     @BeforeClass
     public void startBaseDemoWorkout() {
@@ -21,16 +16,8 @@ public class BaseExercisesTest extends AbstractTest {
 
     @Test(dataProvider = "baseDemoExercises")
     public void baseDemoExercisesTest(String exercise, int times) {
-        int extra = CommonSteps.repeatExerciseAndCountExtra(exercise, times);
+        int extra = CommonSteps.makeExerciseAndCountExtra(exercise, times);
         Assert.assertEquals(extra, 0, extra + " extra exercises were made.");
-    }
-
-    @AfterMethod
-    public void afterExercise() {
-        if (workoutScreen.isExerciseComplete()) {
-            Logger.info("Resting");
-            workoutScreen.waitRest();
-        }
     }
 
     @DataProvider

@@ -13,28 +13,29 @@ public class MainScreen {
     public static final By ALL_DEMO_TILE_LOCATOR = By.xpath("//*[@text='TestAllExercises']");
 //    public static final By NEW_DEMO_TILE_LOCATOR = MobileBy.AccessibilityId ...
 
-    public TimerScreen startDailyTraining() {
+    public WorkoutScreen startDailyTraining() {
         click(START_BUTTON_ID);
-        return new TimerScreen();
+        return new WorkoutScreen();
     }
 
-    public TimerScreen startBaseDemo() {
+    public WorkoutScreen startBaseDemo() {
         scrollUp(MIDDLE_TILE_LOCATOR, 300);
         click(LEFT_TILE_LOCATOR); // todo
-        return new TimerScreen();
+        return new WorkoutScreen();
     }
 
-    public TimerScreen startAllDemo() {
+    public WorkoutScreen startAllDemo() {
         scrollUp(MIDDLE_TILE_LOCATOR, 300);
         scrollFast(RIGHT_TILE_LOCATOR, LEFT_TILE_LOCATOR);
+        scrollFast(RIGHT_TILE_LOCATOR, LEFT_TILE_LOCATOR);
         click(ALL_DEMO_TILE_LOCATOR);
-        return new TimerScreen();
+        return new WorkoutScreen();
     }
 
-    public TimerScreen startNewDemo() {
+    public WorkoutScreen startNewDemo() {
         scrollUp(MIDDLE_TILE_LOCATOR, 300);
         click(RIGHT_TILE_LOCATOR); // todo
-        return new TimerScreen();
+        return new WorkoutScreen();
     }
 
 }

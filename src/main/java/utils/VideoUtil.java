@@ -14,4 +14,9 @@ public class VideoUtil {
         }
         return (int) (isoFile.getMovieBox().getMovieHeaderBox().getDuration() / isoFile.getMovieBox().getMovieHeaderBox().getTimescale() + 1);
     }
+
+
+    public static int getSampleDuration(String exercise) {
+        return getVideoDuration("/home/zerg/carbon-taf/src/test/resources/videos/" + exercise + ".mp4");
+    }
 }

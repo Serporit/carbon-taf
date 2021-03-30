@@ -2,23 +2,22 @@ package utils;
 
 import logging.Logger;
 
-public class Streamer {
+public class Streamer { // TODO! remove all user specific path
     public static void initStreamer(String clip) {
         Logger.debug("Starting streamer with video: " + clip);
-        Terminal.execute("zed2-streamer -i /home/zerg/Videos/" + clip + ".mp4");
+        Terminal.execute("zed2-streamer -i /home/zerg/carbon-taf/src/test/resources/videos/" + clip + ".mp4");
     }
 
     public static void addVideoToQueue(String clip) {
-        Logger.debug("Steaming video: " + clip);
-        Terminal.execute("echo \"/home/zerg/Videos/" + clip + ".mp4\" >> /tmp/z2s.cfg");
+        addVideoToQueue(clip, 1);
     }
 
     public static void addVideoToQueue(String clip, int repeats) {
-        Logger.debug("Steaming video: " + clip + " (" + repeats + " times)");
+        Logger.debug("Steaming video: " + clip + " (x"+ repeats + ")");
         if (repeats <= 0) {
             throw new IllegalArgumentException("repeats should be positive integer");
         }
-        String command = "echo \"/home/zerg/Videos/" + clip + ".mp4\" >> /tmp/z2s.cfg";
+        String command = "echo \"/home/zerg/carbon-taf/src/test/resources/videos/" + clip + ".mp4\" >> /tmp/z2s.cfg";
         for (int i = 0; i < repeats; i++) {
             Terminal.execute(command);
         }

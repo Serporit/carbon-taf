@@ -9,7 +9,7 @@ public class CommonSteps {
     public static final int SAMPLE_DURATION = 3;
     private static final WorkoutScreen workoutScreen = new WorkoutScreen();
 
-    public static int repeatExerciseAndCountExtra(String exercise, int times) {
+    public static int makeExerciseAndCountExtra(String exercise, int times) {
         Logger.info("Starting exercise: " + exercise);
         Streamer.addVideoToQueue("before_" + exercise);
         Streamer.addVideoToQueue(exercise, times);

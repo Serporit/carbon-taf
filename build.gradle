@@ -23,8 +23,8 @@ dependencies {
 test {
     useTestNG() {
         options {
-//            suites(file("src/main/resources/suites/testng.xml"))
-//            useDefaultListeners = true
+            suites(file("src/test/resources/suites/testng.xml"))
+            useDefaultListeners = false
             listeners << 'logging.Listener'
         }
         testLogging {

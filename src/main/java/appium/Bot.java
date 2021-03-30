@@ -79,7 +79,17 @@ public class Bot {
 
     public static void click(By locator) {
         Logger.debug("Clicking element: " + locator);
-        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(locator)).click();
+//        new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.elementToBeClickable(locator)).click();
+        driver.findElement(locator).click();
+    }
+
+    public static void click(Point point) {
+        Logger.debug("Clicking point: " + point.toString());
+        new TouchAction(driver)
+                .press(PointOption.point(point))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(100)))
+                .release()
+                .perform();
     }
 
     private static AndroidElement getAndroidElement(String elementId) {
@@ -103,11 +113,13 @@ public class Bot {
         new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(elementId), value));
     }
 
-    public static void softWaitElementTextToBe(String elementId, String value, int timeout) {
+    public static boolean softWaitElementTextToBe(String elementId, String value, int timeout) {
         try {
             waitElementTextToBe(elementId, value, timeout);
+            return true;
         } catch (Exception e) {
             Logger.debug("Value did not match");
+            return false;
         }
     }
 
@@ -161,7 +173,7 @@ public class Bot {
         Point point = driver.findElement(elementFrom).getCenter();
         Point pointUp = new Point(point.x, point.y - pixels);
         new TouchAction(driver)
-                .press( PointOption.point(point))
+                .press(PointOption.point(point))
                 .waitAction(WaitOptions.waitOptions(Duration.ofMillis(500)))
                 .moveTo(PointOption.point(pointUp))
                 .release()
@@ -175,5 +187,23 @@ public class Bot {
                 .moveTo(PointOption.point(driver.findElement(elementTo).getCenter()))
                 .release()
                 .perform();
+    }
+
+    public static void pressBack() {
+        Logger.debug("Pressing back key");
+        driver.pressKey(new KeyEvent(AndroidKey.BACK));
+    }
+
+    public static void sleep(int seconds) {
+        Logger.debug("Waiting " + seconds + " seconds");
+        try {
+            Thread.sleep(1000L * seconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Point getPoint(String elementId) {
+        return driver.findElement(By.id(elementId)).getCenter();
     }
 }

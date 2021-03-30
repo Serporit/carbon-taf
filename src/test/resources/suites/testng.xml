@@ -2,7 +2,7 @@
 <suite name="Carbon Tests">
     <test name="Exercises test">
         <classes>
-            <class name="BaseExercisesTest"/>
+            <class name="AllExercisesTest"/>
         </classes>
     </test>
 </suite>
