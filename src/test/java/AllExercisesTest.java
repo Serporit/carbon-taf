@@ -12,12 +12,12 @@ public class AllExercisesTest extends AbstractTest {
         loginScreen.startApp();
         mainScreen.startAllDemo().skipTimer();
         workoutScreen.saveSkipPoint();
-        Streamer.initStreamer("banded_pull_apart");
+        Streamer.initStreamer("push_press");
     }
 
     @Test(dataProvider = "allDemoExercises")
-    public void allDemoExercisesTest(String exercise, int repeats) {
-//        int counter = 0;
+    public void allExercisesTest(String exercise, int repeats) {
+        int counter;
         Logger.info("Starting exercise: " + exercise);
         if (exercise.equals("dumbbell_lunge")
                 || exercise.equals("dumbbell_reverse_lunge_alt")
@@ -27,11 +27,10 @@ public class AllExercisesTest extends AbstractTest {
         } else {
             Streamer.addVideoToQueue(exercise, repeats);
         }
-        boolean done = workoutScreen.waitForCounterValue(repeats, VideoUtil.getSampleDuration(exercise) * (repeats + 1));
-//        if (!done) {
-//            counter = workoutScreen.getCount();
-//        }
-        Assert.assertTrue(done, "Exercise not counted");
+        boolean done = workoutScreen.waitForCounterValue(repeats, VideoUtil.getSampleDuration(exercise) * repeats);
+        counter = done ? repeats : workoutScreen.getCount();
+        Logger.toStats(String.format("%s: %s of %s\n", exercise, counter, repeats));
+        Assert.assertEquals(counter, repeats);
     }
 
     @DataProvider

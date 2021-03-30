@@ -1,6 +1,11 @@
 package logging;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class Logger {
 
@@ -20,5 +25,25 @@ public class Logger {
 
     public static void attach(String filePath, String message) {
         LOGGER.info("RP_MESSAGE#FILE#{}#{}", filePath, message);
+    }
+
+    public static void toStats(String message) {
+        try {
+            FileUtils.write(new File("logs/stats.txt"), message, Charset.defaultCharset(), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void logStats() {
+        try {
+            LOGGER.info(FileUtils.readFileToString(new File("logs/stats.txt"), Charset.defaultCharset()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearStats() {
+        FileUtils.deleteQuietly(new File("logs/stats.txt"));
     }
 }

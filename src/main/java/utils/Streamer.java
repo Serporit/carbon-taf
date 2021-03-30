@@ -5,7 +5,7 @@ import logging.Logger;
 public class Streamer { // TODO! remove all user specific path
     public static void initStreamer(String clip) {
         Logger.debug("Starting streamer with video: " + clip);
-        Terminal.execute("zed2-streamer -i /home/zerg/carbon-taf/src/test/resources/videos/" + clip + ".mp4");
+        Terminal.execute("zed2-streamer -i -d /home/zerg/carbon-taf/src/test/resources/videos/" + clip + ".mp4");
     }
 
     public static void addVideoToQueue(String clip) {

@@ -49,32 +49,9 @@ public class Bot {
         driver.closeApp();
     }
 
-    public static void pressHome() {
-        driver.pressKey(new KeyEvent(AndroidKey.HOME));
-    }
-
-    public static void waitForDisappear(String elementId) {
-        waitForDisappear(elementId, WAIT_ELEMENT_TIMEOUT);
-    }
-
-    public static void waitForDisappear(String elementId, int timeoutSeconds) {
-        Logger.debug("Waiting for disappear: " + elementId);
-        new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(By.id(elementId)));
-    }
-
     public static void waitForDisappear(By locator, int timeoutSeconds) {
         Logger.debug("Waiting for disappear: " + locator);
         new WebDriverWait(driver, timeoutSeconds).until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
-
-    public static AndroidElement waitForPresent(String elementId) {
-        Logger.debug("Waiting for presence: " + elementId);
-        return (AndroidElement) new WebDriverWait(driver, WAIT_ELEMENT_TIMEOUT).until(ExpectedConditions.presenceOfElementLocated(By.id(elementId)));
-    }
-
-    public static void click(String elementId) {
-        Logger.debug("Clicking element: " + elementId);
-        getAndroidElement(elementId).click();
     }
 
     public static void click(By locator) {
@@ -92,40 +69,31 @@ public class Bot {
                 .perform();
     }
 
-    private static AndroidElement getAndroidElement(String elementId) {
-        return driver.findElementById(elementId);
+    public static void typeText(By locator, String text) {
+        Logger.debug("Typing text '" + text + "' to " + locator);
+        driver.findElement(locator).sendKeys(text);
     }
 
-    public static void typeText(String elementId, String text) {
-        Logger.debug("Typing text '" + text + "' to input field (Located: " + elementId + ")");
-        getAndroidElement(elementId).sendKeys(text);
-    }
-
-    public static String readText(String elementId) {
-        Logger.debug("Reading text: " + elementId);
-        String text = getAndroidElement(elementId).getText();
+    public static String readText(By locator) {
+        Logger.debug("Reading text: " + locator);
+        String text = driver.findElement(locator).getText();
         Logger.debug(text);
         return text;
     }
 
-    public static void waitElementTextToBe(String elementId, String value, int timeout) {
-        Logger.debug("Waiting for value \"" + value + "\" at " + elementId + " (timeout: " + timeout + "s)");
-        new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(By.id(elementId), value));
+    public static void waitElementTextToBe(By locator, String value, int timeout) {
+        Logger.debug("Waiting for value \"" + value + "\" at " + locator + " (timeout: " + timeout + "s)");
+        Logger.debug(new WebDriverWait(driver, timeout).until(ExpectedConditions.textToBe(locator, value)).toString());
     }
 
-    public static boolean softWaitElementTextToBe(String elementId, String value, int timeout) {
+    public static boolean softWaitElementTextToBe(By locator, String value, int timeout) {
         try {
-            waitElementTextToBe(elementId, value, timeout);
+            waitElementTextToBe(locator, value, timeout);
             return true;
         } catch (Exception e) {
             Logger.debug("Value did not match");
             return false;
         }
-    }
-
-    public static boolean isPresent(String elementId) {
-        Logger.debug("Checking presence of " + elementId);
-        return driver.findElements(By.id(elementId)).size() > 0;
     }
 
     public static boolean isPresent(By locator) {
@@ -139,22 +107,13 @@ public class Bot {
         Logger.attach(screenshot.getAbsolutePath(), name);
     }
 
-    public static void logCurrentActivity() {
-        Logger.debug("Current activity: " + driver.currentActivity());
+    public static void waitForPresent(By locator) {
+        waitForPresent(locator, WAIT_ELEMENT_TIMEOUT);
     }
 
-    public static AndroidElement waitForPresent(By locator) {
-        return waitForPresent(locator, WAIT_ELEMENT_TIMEOUT);
-    }
-
-    public static AndroidElement waitForPresent(String elementId, int timeout) {
-        Logger.debug("Waiting for presence: " + elementId);
-        return (AndroidElement) new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(By.id(elementId)));
-    }
-
-    public static AndroidElement waitForPresent(By locator, int timeout) {
+    public static void waitForPresent(By locator, int timeout) {
         Logger.debug("Waiting for presence: " + locator);
-        return (AndroidElement) new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
+        new WebDriverWait(driver, timeout).until(ExpectedConditions.presenceOfElementLocated(locator));
     }
 
     public static void softWaitForPresent(By locator) {
@@ -167,6 +126,15 @@ public class Bot {
 
     public static void quit() {
         driver.quit();
+    }
+
+    public static void scroll(By elementFrom, By elementTo) {
+        new TouchAction(driver)
+                .press(PointOption.point(driver.findElement(elementFrom).getCenter()))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(500)))
+                .moveTo(PointOption.point(driver.findElement(elementTo).getCenter()))
+                .release()
+                .perform();
     }
 
     public static void scrollUp(By elementFrom, int pixels) {
@@ -194,7 +162,7 @@ public class Bot {
         driver.pressKey(new KeyEvent(AndroidKey.BACK));
     }
 
-    public static void sleep(int seconds) {
+    public static void sleep(int seconds) { // do not use it! )
         Logger.debug("Waiting " + seconds + " seconds");
         try {
             Thread.sleep(1000L * seconds);
@@ -203,7 +171,7 @@ public class Bot {
         }
     }
 
-    public static Point getPoint(String elementId) {
-        return driver.findElement(By.id(elementId)).getCenter();
+    public static Point getPoint(By locator) {
+        return driver.findElement(locator).getCenter();
     }
 }

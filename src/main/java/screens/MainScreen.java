@@ -6,11 +6,11 @@ import static appium.Bot.*;
 
 public class MainScreen {
 
-    public static final String START_BUTTON_ID = "com.clearstone.rise:id/btn_launching";
-    public static final By LEFT_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[1]");
-    public static final By MIDDLE_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[3]");
-    public static final By RIGHT_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[5]");
-    public static final By ALL_DEMO_TILE_LOCATOR = By.xpath("//*[@text='TestAllExercises']");
+    private static final By START_BUTTON_ID = By.id("com.clearstone.rise:id/btn_launching");
+    private static final By LEFT_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[1]");
+    private static final By MIDDLE_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[3]");
+    private static final By RIGHT_TILE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/rv_strength_workouts']/*[5]");
+    private static final By ALL_DEMO_TILE_LOCATOR = By.xpath("//*[@text='TestAllExercises']");
 //    public static final By NEW_DEMO_TILE_LOCATOR = MobileBy.AccessibilityId ...
 
     public WorkoutScreen startDailyTraining() {

@@ -1,5 +1,6 @@
 import appium.Bot;
 import logging.Logger;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -8,7 +9,8 @@ import screens.LoginScreen;
 import screens.MainScreen;
 import screens.WorkoutScreen;
 import utils.Streamer;
-import utils.Terminal;
+
+import java.io.File;
 
 
 public class AbstractTest {
@@ -18,7 +20,9 @@ public class AbstractTest {
 
     @BeforeSuite
     public void init() {
-        Terminal.execute("rm /tmp/z2s.cfg");
+//        Terminal.execute("rm /tmp/z2s.cfg");
+        FileUtils.deleteQuietly(new File("/tmp/z2s.cfg"));
+        Logger.clearStats();
         Bot.init();
     }
 
@@ -30,13 +34,12 @@ public class AbstractTest {
 
     @AfterClass
     public void afterWorkout() {
+        Logger.logStats();
         Streamer.close();
-        Bot.pressBack();
     }
 
     @AfterSuite(alwaysRun = true)
     public void tearDown() {
-        Logger.info("Closing the app");
         Bot.closeApp();
         Bot.quit();
     }

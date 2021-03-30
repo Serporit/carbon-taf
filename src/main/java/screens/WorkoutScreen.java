@@ -9,46 +9,42 @@ import utils.PointUtil;
 import static appium.Bot.*;
 
 public class WorkoutScreen {
-    private final static String COUNTER_ID = "com.clearstone.rise:id/tv_count";
-    private final static String REST_TIMER_ID = "com.clearstone.rise:id/blockTimer";
-    private final static String GOAL_COUNT_ID = "com.clearstone.rise:id/countExercise";
-    private final static String EXERCISE_NAME_ID = "com.clearstone.rise:id/tv_name";
-    private final static String SCORE_ID = "com.clearstone.rise:id/chart_volume";
-    private final static By REST_MESSAGE_LOCATOR = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS']");
-    private final static String NEXT_EXERCISE = "com.clearstone.rise:id/tv_next_exercise";
-    public static final String SKIP_TIMER = "com.clearstone.rise:id/btn_skip";
+    private static final By COUNTER = By.id("com.clearstone.rise:id/tv_count");
+    private static final By REST_TIMER = By.id("com.clearstone.rise:id/blockTimer");
+    private static final By GOAL_COUNT = By.id("com.clearstone.rise:id/countExercise");
+    private static final By EXERCISE_NAME = By.id("com.clearstone.rise:id/tv_name");
+    private static final By SCORE = By.id("com.clearstone.rise:id/chart_volume");
+    private static final By WAIT_REST_MESSAGE = By.xpath("//*[@resource-id='com.clearstone.rise:id/tv_name' and @text='REST 10 SECONDS']");
+    private static final By NEXT_EXERCISE = By.id("com.clearstone.rise:id/tv_next_exercise");
+    private static final By SKIP_TIMER = By.id("com.clearstone.rise:id/btn_skip");
     //com.clearstone.rise:id/btn_pause
     // chart_volume
     // tv_total_volume_label_chart
 
     public int getCount() {
-        return Integer.parseInt(readText(COUNTER_ID));
+        return Integer.parseInt(readText(COUNTER));
     }
 
     public int getGoal() {
-        waitForPresent(GOAL_COUNT_ID);
-        return Integer.parseInt(readText(GOAL_COUNT_ID));
+        waitForPresent(GOAL_COUNT);
+        return Integer.parseInt(readText(GOAL_COUNT));
     }
 
     public void waitRest() {
-        Bot.waitForDisappear(REST_TIMER_ID, 15);
-    }
-
-    public boolean isCountPresent() {
-        return isPresent(COUNTER_ID);
+        waitForDisappear(REST_TIMER, 15);
     }
 
     public String getExercise() {
-        return readText(EXERCISE_NAME_ID).replaceAll(" ", "").toLowerCase();
+        return readText(EXERCISE_NAME).replaceAll(" ", "").toLowerCase();
     }
 
     public boolean waitForCounterValue(int goal, int timeout) {
-       return softWaitElementTextToBe(COUNTER_ID, String.valueOf(goal), timeout);
+        return softWaitElementTextToBe(COUNTER, String.valueOf(goal), timeout);
     }
 
     public boolean isExerciseComplete() {
-        softWaitForPresent(REST_MESSAGE_LOCATOR);
-        return isPresent(REST_MESSAGE_LOCATOR) || isPresent(SCORE_ID);
+        softWaitForPresent(WAIT_REST_MESSAGE);
+        return isPresent(WAIT_REST_MESSAGE) || isPresent(SCORE);
     }
 
     public void skipExercise() {
@@ -70,7 +66,7 @@ public class WorkoutScreen {
     }
 
     public void skipRest() {
-        waitForPresent(REST_TIMER_ID);
+        softWaitForPresent(REST_TIMER);
         skipExercise();
     }
 }
